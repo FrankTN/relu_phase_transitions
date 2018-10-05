@@ -2,8 +2,6 @@
 % Plot learning curves (epsilon_g against ?) for different K
 K = 2;
 M = 2;
-alpha = 40;
-
 % alpha = beta*P/(NK)
 % beta is the inverse temperature
 % P is the number of examples
@@ -12,9 +10,16 @@ alpha = 40;
 % M is the number of hidden units in the teacher
 
 % f is the free energy, to be minimized
-f = @(x) free_energy(x(1),x(2),x(3),alpha,K,M);
-x0 = [1,0,0];
-x,fval = fminsearch(f,x0);
+alpha = linspace(0,100,1000);
+x = zeros(3,1000);
+
+for j = 1:1000
+    f = @(x) free_energy(x(1),x(2),x(3),alpha,K,M);
+    x0 = [0,0,1];
+    z = fminsearch(f,x0)
+    x(j,1:3) = z;
+end
+plot(alpha,x);
 
 % We construct initial Q, R and T 
 Q_pre = rand(K);
